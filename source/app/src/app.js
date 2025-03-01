@@ -63,7 +63,7 @@ const products = [
         price: 50
     },
     {
-        id: 105,
+        id: 99999,
         image: "/products/imgs/flag.jpg",
         name: "FLAG obtained from @HACK 2025",
         description: "I did NOT register on time, but I managed to get this flag. I am selling it here for $2025.",
@@ -77,15 +77,19 @@ const products = [
 // Live Data
 // ---------------------------------------------------------------------------------------------------------------------
 
-let purchases = [];
+let balance = 2024;
 
 let cart = [];
 
-let balance = 2024;
-
-function getTotal() {
+function cartTotal() {
     return cart.reduce((sum, item) => sum + item.price, 0);
-};
+}
+
+let purchases = [];
+
+function purchasesTotal() {
+    return purchases.reduce((sum, item) => sum + item.price, 0);
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Middleware
@@ -117,7 +121,18 @@ app.get('/shop', (req, res) => {
         {
             products: products,
             cart: cart,
-            total: getTotal(),
+            cartTotal: cartTotal(),
+            purchasesTotal: purchasesTotal(),
+            balance: balance,
+        }
+    );
+});
+
+app.get('/purchases', (req, res) => {
+    res.render(
+        'purchases.twig',
+        {
+            purchases: purchases,
             balance: balance,
         }
     );
@@ -151,7 +166,7 @@ app.post("/api/remove-from-cart/:productId", (req, res) => {
 });
 
 app.post("/api/buy", lockRoute, async (req, res) => {
-    const total = getTotal();
+    const total = cartTotal();
     if (balance < total) {
         return res.status(401).json({success: false, message: "You have no money"});
     }

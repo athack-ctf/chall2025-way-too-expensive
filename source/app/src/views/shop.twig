@@ -13,10 +13,11 @@
 
     <!-- Display current balance -->
     <div class="balance">
-        <span>Balance: ${{ balance }}</span>
+        <span>Balance: ${{ balance }}</span><br><button id="view-other-btn" onclick="location.href='/purchases'">View Purchases (worth ${{ purchasesTotal }})</button>
     </div>
 
     <button id="view-cart-btn">View Cart ({{ cart.length }})</button>
+
 </header>
 
 <div class="container">
@@ -46,9 +47,10 @@
         </ul>
         <p id="purchase-status" style="display:none;"></p>
         <br>
-        <p id="total-price">Total: $<span>{{ total }}</span></p>
+        <p id="total-price">Total: $<span>{{ cartTotal }}</span></p>
+        <p>Your balance: $<span>{{ balance }}</span></p>
         <br>
-        {% if total <= balance %}
+        {% if cartTotal <= balance %}
             <button id="buy-btn" class="cart-button" onclick="buyItems()">
                 Buy Now
                 <img src="/imgs/interac-32-32.png" alt="Interac Icon"

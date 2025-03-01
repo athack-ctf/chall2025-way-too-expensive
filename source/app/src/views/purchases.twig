@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Depanneur - Oddities for Sale</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <h1>Welcome to Online Depanneur</h1>
+    <p>Find oddities, quirks, and unique treasures here!</p>
+
+    <!-- Display current balance -->
+    <div class="balance">
+        <span>Balance: ${{ balance }}</span>
+        <br>
+        <button id="view-other-btn" onclick="location.href='/shop'">Buy some more stuff!</button>
+    </div>
+</header>
+
+<div class="container">
+
+    {% for product in purchases %}
+        <div id="product-{{ product.id }}" class="product-card">
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            {% if product.id == 99999 %}
+                <p style="font-size: 10px;">ATHACKCTF{R4ce_R4ce_R4ce_C0nditi0n5}</p>
+            {% endif %}
+            <p class="price">${{ product.price }}</p>
+        </div>
+    {% endfor %}
+    {% if purchases.length == 0 %}
+        <p>You didn't buy anything yet.</p>
+    {% endif %}
+</div>
+</body>
+</html>
