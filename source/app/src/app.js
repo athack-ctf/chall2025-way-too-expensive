@@ -64,7 +64,7 @@ const products = [
         id: 105,
         image: "/products/imgs/flag.jpg",
         name: "FLAG obtained from @HACK 2025",
-        description: "I did NOT register on time, but I managed to the flag somehow... So I am selling it here :))",
+        description: "I did NOT register on time, but I managed to get this flag. I am selling it here for $2025",
         price: 2025
     },
 
@@ -108,6 +108,20 @@ app.post("/api/add-to-cart/:productId", (req, res) => {
     console.log(`Product ${product.id} added.`);
     res.json({message: "Product added"});
 });
+
+// Route to remove an item from the cart
+app.post("/api/remove-from-cart/:productId", (req, res) => {
+    const productId = parseInt(req.params.productId);
+    const product = products.find(p => p.id === parseInt(req.params.productId));
+    if (!product) {
+        console.log(`Product ${product.id} not found.`);
+        return res.status(404).json({message: "Product not found"});
+    }
+    console.log(`Product ${product.id} removed.`);
+    cart = cart.filter(item => item.id !== productId);
+    res.json({message: "Product removed from cart"});
+});
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Starting app

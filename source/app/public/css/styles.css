@@ -66,6 +66,7 @@ header {
     background-color: #4cae4c;
 }
 
+/* Cart Modal Styles */
 #cart-modal {
     position: fixed;
     top: 50%;
@@ -86,10 +87,57 @@ header {
     margin: 10px 0;
 }
 
-#cart-items li {
-    margin-bottom: 5px;
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cart-item-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.cart-item-name {
+    font-size: 1rem;
+    flex-grow: 1;
+}
+
+.remove-btn {
+    background-color: #d9534f;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.remove-btn:hover {
+    background-color: #c9302c;
 }
 
 button {
     cursor: pointer;
+}
+
+/* Cart Button Styles */
+#view-cart-btn, .cart-button {
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#view-cart-btn:hover, .cart-button:hover {
+    background-color: #4cae4c;
+}
+
+#view-cart-btn {
+    margin-top: 20px;
 }

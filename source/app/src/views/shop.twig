@@ -20,19 +20,25 @@
             <h3>{{ product.name }}</h3>
             <p class="description">{{ product.description }}</p>
             <p class="price">${{ product.price }}</p>
-            <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">Add to Cart</button>
+            <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">Add to 🛒</button>
         </div>
     {% endfor %}
 </div>
 
 <div id="cart-modal" style="display:none;">
-    <h2>Your Cart</h2>
+    <h2>Your Cart 🛒</h2>
     <ul id="cart-items">
         {% for item in cart %}
-            <li>{{ item.name }} - ${{ item.price }}</li>
+            <li class="cart-item">
+                <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-image">
+                <span class="cart-item-name">{{ item.name }}</span> - ${{ item.price }}
+                <button class="remove-btn" onclick="removeFromCart({{ item.id }})">🗑️</button>
+            </li>
+        {% else %}
+            <li>Your cart is empty.</li>
         {% endfor %}
     </ul>
-    <button id="close-cart-btn">Close</button>
+    <button id="close-cart-btn" class="cart-button">Close</button>
 </div>
 
 <script>
@@ -48,6 +54,20 @@
                 location.reload();
             })
             .catch(err => console.error('Error adding product:', err));
+    }
+
+    // Function to remove product from the cart
+    function removeFromCart(productId) {
+        fetch(`/api/remove-from-cart/${productId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',}
+        })
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data.message);
+                location.reload();
+            })
+            .catch(err => console.error('Error removing product:', err));
     }
 
     // Function to view the cart
