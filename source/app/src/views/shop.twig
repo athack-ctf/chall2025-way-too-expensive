@@ -49,7 +49,12 @@
         <p id="total-price">Total: $<span>{{ total }}</span></p>
         <br>
         {% if total <= balance %}
-            <button id="buy-btn" class="cart-button">Buy Now 💰️</button>
+            <button id="buy-btn" class="cart-button" onclick="buyItems()">
+                Buy Now
+                <img src="/imgs/interac-32-32.png" alt="Interac Icon"
+                     style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
+            </button>
+
             <br>
         {% else %}
             <p>You don't have the money!</p>
@@ -124,14 +129,18 @@
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 if (data.success) {
                     statusMsg.innerText = "Purchase successful! ✅ (reloading in 2 seconds)";
                     setTimeout(() => {
                         location.reload();
                     }, 2000);
                 } else {
-                    statusMsg.innerText = `Purchase failed: ${data.message} ❌`;
+                    statusMsg.innerText = `Purchase failed (reloading in 2 seconds): ${data.message} ❌`;
                     buyBtn.disabled = false;
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                 }
             })
             .catch(err => {
@@ -141,15 +150,8 @@
             });
     }
 
-    // Event listener
-    document.getElementById("buy-btn").addEventListener("click", buyItems);
-
-
-    // Event listeners
-    document.getElementById("buy-btn").addEventListener("click", buyItems);
     document.getElementById("view-cart-btn").addEventListener("click", () => {
         document.getElementById("cart-modal").style.display = "block";
-        updateTotal();
     });
     document.getElementById("close-cart-btn").addEventListener("click", () => {
         document.getElementById("cart-modal").style.display = "none";

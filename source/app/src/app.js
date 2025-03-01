@@ -21,6 +21,14 @@ app.set('view engine', 'html');
 
 app.use(express.urlencoded({extended: true}));
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Utils
+// ---------------------------------------------------------------------------------------------------------------------
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------------------------------------------------------------
@@ -69,9 +77,31 @@ const products = [
 // Live Data
 // ---------------------------------------------------------------------------------------------------------------------
 
+let purchases = [];
+
 let cart = [];
 
 let balance = 2024;
+
+function getTotal() {
+    return cart.reduce((sum, item) => sum + item.price, 0);
+};
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Middleware
+// ---------------------------------------------------------------------------------------------------------------------
+let isLocked = false;
+
+// Middleware to lock the route
+function lockRoute(req, res, next) {
+    if (isLocked) {
+        // If the route is locked, send a 503 Service Unavailable response
+        return res.status(503).send('This operation is currently locked. Please try again later.');
+    }
+
+    isLocked = true;
+    next();
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // View Routes
@@ -87,7 +117,7 @@ app.get('/shop', (req, res) => {
         {
             products: products,
             cart: cart,
-            total: cart.reduce((sum, item) => sum + item.price, 0),
+            total: getTotal(),
             balance: balance,
         }
     );
@@ -118,6 +148,19 @@ app.post("/api/remove-from-cart/:productId", (req, res) => {
     console.log(`Product ${product.id} removed.`);
     cart = cart.filter(item => item.id !== productId);
     res.json({message: "Product removed from cart"});
+});
+
+app.post("/api/buy", lockRoute, async (req, res) => {
+    const total = getTotal();
+    if (balance < total) {
+        return res.status(401).json({success: false, message: "You have no money"});
+    }
+    balance -= total;
+    await sleep(1000);
+    purchases.push(...cart);
+    res.json({success: true, message: "New purchases made"});
+    // Release lock
+    isLocked = false;
 });
 
 
