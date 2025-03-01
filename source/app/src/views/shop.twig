@@ -33,19 +33,37 @@
 
 <div id="cart-modal" style="display:none;">
     <h2>Your Cart 🛒</h2>
-    <ul id="cart-items">
-        {% for item in cart %}
-            <li class="cart-item">
-                <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-image">
-                <span class="cart-item-name">{{ item.name }}</span> - ${{ item.price }}
-                <button class="remove-btn" onclick="removeFromCart({{ item.id }})">🗑️</button>
-            </li>
+
+    {% if cart.length > 0 %}
+        <ul id="cart-items">
+            {% for item in cart %}
+                <li class="cart-item">
+                    <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-image">
+                    <span class="cart-item-name">{{ item.name }}</span> - ${{ item.price }}
+                    <button class="remove-btn" onclick="removeFromCart({{ item.id }})">🗑️</button>
+                </li>
+            {% endfor %}
+        </ul>
+        <p id="purchase-status" style="display:none;"></p>
+        <br>
+        <p id="total-price">Total: $<span>{{ total }}</span></p>
+        <br>
+        {% if total <= balance %}
+            <button id="buy-btn" class="cart-button">Buy Now 💰️</button>
+            <br>
         {% else %}
-            <li>Your cart is empty.</li>
-        {% endfor %}
-    </ul>
+            <p>You don't have the money!</p>
+            <br>
+        {% endif %}
+
+    {% else %}
+        <p>Your cart is empty.</p>
+        <br>
+    {% endif %}
+    <br>
     <button id="close-cart-btn" class="cart-button">Close</button>
 </div>
+
 
 <script>
     // Function to add product to the cart
@@ -90,6 +108,53 @@
     // Event listeners
     document.getElementById('view-cart-btn').addEventListener('click', viewCart);
     document.getElementById('close-cart-btn').addEventListener('click', closeCart);
+
+    // Function to buy items using an API call
+    function buyItems() {
+        let buyBtn = document.getElementById("buy-btn");
+        let statusMsg = document.getElementById("purchase-status");
+
+        buyBtn.disabled = true;
+        statusMsg.style.display = "block";
+        statusMsg.innerText = "Processing payment... ⏳";
+
+        fetch('/api/buy', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusMsg.innerText = "Purchase successful! ✅ (reloading in 2 seconds)";
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    statusMsg.innerText = `Purchase failed: ${data.message} ❌`;
+                    buyBtn.disabled = false;
+                }
+            })
+            .catch(err => {
+                statusMsg.innerText = "Error processing purchase ❌";
+                console.error("Purchase error:", err);
+                buyBtn.disabled = false;
+            });
+    }
+
+    // Event listener
+    document.getElementById("buy-btn").addEventListener("click", buyItems);
+
+
+    // Event listeners
+    document.getElementById("buy-btn").addEventListener("click", buyItems);
+    document.getElementById("view-cart-btn").addEventListener("click", () => {
+        document.getElementById("cart-modal").style.display = "block";
+        updateTotal();
+    });
+    document.getElementById("close-cart-btn").addEventListener("click", () => {
+        document.getElementById("cart-modal").style.display = "none";
+    });
+
 </script>
 </body>
 </html>

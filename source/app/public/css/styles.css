@@ -150,3 +150,30 @@ button {
 #view-cart-btn {
     margin-top: 20px;
 }
+
+#total-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+#purchase-status {
+    font-weight: bold;
+    margin-top: 10px;
+    color: green;
+}
+
+#buy-btn {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#buy-btn:hover {
+    background-color: #e68900;
+}

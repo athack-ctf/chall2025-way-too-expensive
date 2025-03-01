@@ -1,6 +1,7 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const path = require('path');
+const {sum} = require("nunjucks/src/filters");
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Express app initialization
@@ -86,6 +87,7 @@ app.get('/shop', (req, res) => {
         {
             products: products,
             cart: cart,
+            total: cart.reduce((sum, item) => sum + item.price, 0),
             balance: balance,
         }
     );
