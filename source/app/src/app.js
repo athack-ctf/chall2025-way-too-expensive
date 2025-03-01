@@ -49,22 +49,15 @@ const products = [
     {
         id: 103,
         image: "/products/imgs/land_on_the_moon.jpg",
-        name: "Own a Piece of the Moon",
-        description: "Perfect for space lovers. I am the businessman from the little prince.",
+        name: "The Moon",
+        description: "I am the businessman from the little prince and I am selling the moon for 50 bucks. It's a perfect for space lovers.",
         price: 50
-    },
-    {
-        id: 104,
-        image: "/products/imgs/the_moon.jpg",
-        name: "Own a Piece of the Moon",
-        description: "I am selling the whole moon for a dollar! I saw the moon first, it's mine!",
-        price: 1
     },
     {
         id: 105,
         image: "/products/imgs/flag.jpg",
         name: "FLAG obtained from @HACK 2025",
-        description: "I did NOT register on time, but I managed to get this flag. I am selling it here for $2025",
+        description: "I did NOT register on time, but I managed to get this flag. I am selling it here for $2025.",
         price: 2025
     },
 
