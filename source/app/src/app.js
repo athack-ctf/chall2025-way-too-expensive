@@ -43,7 +43,7 @@ const products = [
         id: 102,
         image: "/products/imgs/used_toothbrush.jpg",
         name: "Toothbrush (Used for 15 years)",
-        description: "Better than the tooth pick! I don't need it anymore ... because I lost all my teeth.",
+        description: "Better than the toothpick! I don't need it anymore ... because I lost all my teeth.",
         price: 20
     },
     {
@@ -72,7 +72,13 @@ const products = [
 ]
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Routes
+// Live Data
+// ---------------------------------------------------------------------------------------------------------------------
+
+let cart = [];
+
+// ---------------------------------------------------------------------------------------------------------------------
+// View Routes
 // ---------------------------------------------------------------------------------------------------------------------
 
 app.get('/', (req, res) => {
@@ -83,9 +89,24 @@ app.get('/shop', (req, res) => {
     res.render(
         'shop.twig',
         {
-            products: products
+            products: products,
+            cart: cart
         }
     );
+});
+
+// ---------------------------------------------------------------------------------------------------------------------
+// API Routes
+// ---------------------------------------------------------------------------------------------------------------------
+app.post("/api/add-to-cart/:productId", (req, res) => {
+    const product = products.find(p => p.id === parseInt(req.params.productId));
+    if (!product) {
+        console.log(`Product ${product.id} not found.`);
+        return res.status(404).json({message: "Product not found"});
+    }
+    cart.push(product);
+    console.log(`Product ${product.id} added.`);
+    res.json({message: "Product added"});
 });
 
 // ---------------------------------------------------------------------------------------------------------------------

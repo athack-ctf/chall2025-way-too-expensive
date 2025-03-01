@@ -10,6 +10,7 @@
 <header>
     <h1>Welcome to Online Depanneur</h1>
     <p>Find oddities, quirks, and unique treasures here!</p>
+    <button id="view-cart-btn">View Cart ({{ cart.length }})</button>
 </header>
 
 <div class="container">
@@ -18,10 +19,51 @@
             <img src="{{ product.image }}" alt="{{ product.name }}">
             <h3>{{ product.name }}</h3>
             <p class="description">{{ product.description }}</p>
-            <p class="price">${{ product.price | float | round(2) }}</p>
-            <button class="add-to-cart-btn">Add to Cart</button>
+            <p class="price">${{ product.price }}</p>
+            <button class="add-to-cart-btn" onclick="addToCart({{ product.id }})">Add to Cart</button>
         </div>
     {% endfor %}
 </div>
+
+<div id="cart-modal" style="display:none;">
+    <h2>Your Cart</h2>
+    <ul id="cart-items">
+        {% for item in cart %}
+            <li>{{ item.name }} - ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+    <button id="close-cart-btn">Close</button>
+</div>
+
+<script>
+    // Function to add product to the cart
+    function addToCart(productId) {
+        fetch(`/api/add-to-cart/${productId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',}
+        })
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data.message);
+                location.reload();
+            })
+            .catch(err => console.error('Error adding product:', err));
+    }
+
+    // Function to view the cart
+    function viewCart() {
+        const cartModal = document.getElementById('cart-modal');
+        cartModal.style.display = 'block';
+    }
+
+    // Function to close the cart modal
+    function closeCart() {
+        document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    // Event listeners
+    document.getElementById('view-cart-btn').addEventListener('click', viewCart);
+    document.getElementById('close-cart-btn').addEventListener('click', closeCart);
+</script>
 </body>
 </html>
