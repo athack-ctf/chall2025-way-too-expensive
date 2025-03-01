@@ -1,10 +1,6 @@
 # How to Solve the Challenge?
 
-Provide reproducible steps to solve the challenge. This can include:
-
-- Runnable code (e.g., `PoC.py`)
-- A Bash script or a sequence of commented commands
-- Well-explained instructions
-- ...
-
-Ensure that all dependencies required to build or run the solution are provided (e.g., `requirements.txt`) or thoroughly documented.
+- Create cart with some affordable items
+- Try purchasing them
+- Try adding the flag as the purchase is being processes (I added a sleep for 1 second to increase the likelihood of a
+  race condition)
