@@ -1,7 +1,7 @@
 # Name should be "Challenge name" if only one flag, or
 # "Challenge name - 1", "Challenge name - 2", etc. if multiple ones.
 # Be careful of the spaces before and after the '-'
-name: ""
+name: "Way Too Expensive"
 author: ""
 category: one of <Stegano>, <Crypto>, <AI>, <Reverse>, <Web>, <Miscellaneous>, <Blockchain>, <Pwn>, <Hardware>, <Forensics>
 description: |
