@@ -168,13 +168,15 @@ app.post("/api/remove-from-cart/:productId", (req, res) => {
 app.post("/api/buy", lockRoute, async (req, res) => {
     const total = cartTotal();
     if (balance < total) {
+        // releasing lock!!!!
+        isLocked = false;
         return res.status(401).json({success: false, message: "You have no money"});
     }
     balance -= total;
     await sleep(1000);
     purchases.push(...cart);
+    // releasing lock!!!!
     res.json({success: true, message: "New purchases made"});
-    // Release lock
     isLocked = false;
 });
 
