@@ -1,0 +1,25 @@
+name: "Way Too Expensive"
+author: "Anis"
+category: <Web>
+description: |
+    In a world dominated by consumerism, a new e-commerce platform has emerged, one dedicated to selling secondhand items.
+    You'll be shocked at what people are willing to part with. Among the listings, a flag is up for sale... but it comes with a price.
+
+    [Start your challenge instance](https://instancer.athackctf.com/chall2025-way-too-expensive/create)
+    
+value: 0
+
+type: standard
+
+flags:
+  - type: "static"
+    content: "ATHACKCTF{R4ce_R4ce_R4ce_C0nditi0n5}"
+    data: "case_insensitive"
+
+tags:
+
+files:
+
+state: visible
+
+version: "0.1"
