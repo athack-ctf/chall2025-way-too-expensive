@@ -1,7 +1,6 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const path = require('path');
-const {sum} = require("nunjucks/src/filters");
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Express app initialization
@@ -12,7 +11,7 @@ const app = express();
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, '../public')));
 
-const env = nunjucks.configure(path.join(__dirname, 'views'), {
+nunjucks.configure(path.join(__dirname, 'views'), {
     autoescape: true,
     express: app
 });
@@ -59,7 +58,7 @@ const products = [
         id: 103,
         image: "/products/imgs/land_on_the_moon.jpg",
         name: "The Moon",
-        description: "I am the businessman from the little prince and I am selling the moon for 50 bucks. It's a perfect for space lovers.",
+        description: "I am the businessman from the little prince and I am selling the moon for 50 bucks. It's perfect for space lovers.",
         price: 50
     },
     {
@@ -92,18 +91,26 @@ function purchasesTotal() {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Middleware
+// Lock middleware
 // ---------------------------------------------------------------------------------------------------------------------
 let isLocked = false;
 
 // Middleware to lock the route
-function lockRoute(req, res, next) {
+async function lockRoute(req, res, next) {
+    // for (let i = 0; i < 10 && isLocked; i++) {
+    //     await sleep(1000);
+    // }
     if (isLocked) {
-        // If the route is locked, send a 503 Service Unavailable response
-        return res.status(503).send('This operation is currently locked. Please try again later.');
+        // If the route is locked, send a 429
+        return res.status(429).send('This operation is currently locked. Please try again later.');
+    } else {
+        isLocked = true;
+        next();
     }
+}
 
-    isLocked = true;
+async function unlockRoute(req, res, next) {
+    isLocked = false;
     next();
 }
 
@@ -161,24 +168,32 @@ app.post("/api/remove-from-cart/:productId", (req, res) => {
         return res.status(404).json({message: "Product not found"});
     }
     console.log(`Product ${product.id} removed.`);
-    cart = cart.filter(item => item.id !== productId);
+    const toRemoveIdx = cart.findIndex(item => item.id === productId);
+    if (toRemoveIdx !== -1) {
+        cart.splice(toRemoveIdx, 1);
+    }
+
     res.json({message: "Product removed from cart"});
 });
 
-app.post("/api/buy", lockRoute, async (req, res) => {
-    const total = cartTotal();
-    if (balance < total) {
-        // releasing lock!!!!
-        isLocked = false;
-        return res.status(401).json({success: false, message: "You have no money"});
-    }
-    balance -= total;
-    await sleep(1000);
-    purchases.push(...cart);
-    // releasing lock!!!!
-    res.json({success: true, message: "New purchases made"});
-    isLocked = false;
-});
+app.post("/api/buy",
+    lockRoute,
+    async (req, res, next) => {
+        const total = cartTotal();
+        if (balance < total) {
+            next();
+            res.status(401).json({success: false, message: "You have no money"});
+            return;
+        }
+        balance -= total;
+        await sleep(1000);
+        purchases.push(...cart);
+        cart = [];
+        res.json({success: true, message: "New purchases made"});
+        next();
+    },
+    unlockRoute
+);
 
 
 // ---------------------------------------------------------------------------------------------------------------------
