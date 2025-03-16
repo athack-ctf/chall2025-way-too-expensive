@@ -1,10 +1,13 @@
-# Running Your Challenge
+# Running This Challenge
 
-Place all the code needed to run your challenge in this directory, and document the required environment as described
-below:
+Build
+```
+docker build -t athack-ctf/chall2025-way-too-expensive:latest .
+```
 
-- If you have included a `Dockerfile` and a `docker-compose.yml`, then that is all that should be enough (unless additional
-  explanations are needed as well).
-- If you have not, please document the steps to create a runnable instance of your challenge, as we (Anis and Hugo)
-  will refer to this when adding the `Dockerfile` and `docker-compose.yml`
-- For any clarifications, consult us (Anis and Hugo).
+Run
+```
+docker run -d --name way-too-expensive \
+  -p 52051:2025 \
+  athack-ctf/chall2025-way-too-expensive:latest
+```
