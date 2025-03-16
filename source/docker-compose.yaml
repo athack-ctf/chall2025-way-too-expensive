@@ -1,7 +1,7 @@
+version: '3.8'
 services:
   way-too-expensive:
-    build: .
     image: athack-ctf/chall2025-way-too-expensive:latest
+    build: .
     ports:
     - 52051:2025
-version: '3.8'
